@@ -21,21 +21,6 @@ export class TreeNodeService {
     return res;
   }
 
-  private getAllParentNodesRecursive(id: string): TreeNode[] {
-    const res: TreeNode[] = [];
-    const node = this.treeNodes.find((node) => node.id === id);
-    if (!node) return [];
-
-    for (let i = 0; i < this.treeNodes.length; i++) {
-      if (this.treeNodes[i].id === node.parentid) {
-        const childNodes = this.getAllChildNodesRecursive(this.treeNodes[i].id);
-        res.push(...childNodes);
-      }
-    }
-    res.push(node);
-    return res;
-  }
-
   private deleteOne(id: string) {
     const childNodes = this.getAllChildNodesRecursive(id);
     this.treeNodes.forEach((node) => {
