@@ -55,14 +55,11 @@ export class TreeNodeService {
   ) {
     // Проверяем может уже был добавлен
     const addAlready = this.treeNodes.find((n) => n.id === newNode.id);
-    console.log('addAlready', addAlready);
 
     if (addAlready) return;
     // Есть ли родитель из новых узлов то сперва добавляем родителя
     const parentInNew = newNodes.find((n) => n.id === newNode.parentid);
-    console.log('parentInNew', parentInNew);
     if (parentInNew) this.addOne(parentInNew, newNodes);
-    console.log('add node');
     this.treeNodes.push({ ...newNode, deleted: false });
   }
 
@@ -84,11 +81,10 @@ export class TreeNodeService {
   }
 
   apply(body: TreeNodeApplyDto) {
-    console.log(body);
-    if (body.delete) for (const del of body.delete) this.deleteOne(del.id);
     if (body.rename)
       for (const rename of body.rename) this.renameOne(rename.id, rename.value);
     if (body.new) for (const newOne of body.new) this.addOne(newOne, body.new);
+    if (body.delete) for (const del of body.delete) this.deleteOne(del.id);
     return { ok: true };
   }
 }
