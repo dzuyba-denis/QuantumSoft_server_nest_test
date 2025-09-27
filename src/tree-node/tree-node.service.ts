@@ -21,11 +21,18 @@ export class TreeNodeService {
     return res;
   }
 
-  private deleteOne(id: string) {
+  // Возвращается массив удаленных нод (включая дочерних)
+  private deleteOne(id: string): TreeNode[] {
+    const res: TreeNode[] = [];
     const childNodes = this.getAllChildNodesRecursive(id);
     this.treeNodes.forEach((node) => {
-      if (childNodes.some((n) => n.id === node.id)) node.deleted = true;
+      if (!node.deleted)
+        if (childNodes.some((n) => n.id === node.id)) {
+          node.deleted = true;
+          res.push(node);
+        }
     });
+    return res;
   }
 
   private renameOne(id: string, newValue: string) {
@@ -69,7 +76,12 @@ export class TreeNodeService {
     if (body.rename)
       for (const rename of body.rename) this.renameOne(rename.id, rename.value);
     if (body.new) for (const newOne of body.new) this.addOne(newOne, body.new);
-    if (body.delete) for (const del of body.delete) this.deleteOne(del.id);
-    return { ok: true };
+    const deleted: TreeNode[] = [];
+    if (body.delete)
+      for (const del of body.delete) {
+        const nodes = this.deleteOne(del.id);
+        deleted.push(...nodes);
+      }
+    return { ok: true, deleted: deleted.map((n) => ({ id: n.id })) };
   }
 }

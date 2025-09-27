@@ -36,4 +36,10 @@ export const treeNodesInit: TreeNode[] = [
     value: 'Node 6',
     deleted: false,
   },
+  {
+    id: '7',
+    parentid: '6',
+    value: 'Node 7',
+    deleted: false,
+  },
 ];
